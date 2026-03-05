@@ -1,40 +1,48 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Spawns pipe prefabs at a fixed interval with randomised vertical offset.
+/// </summary>
 public class PipeSpawnerScript : MonoBehaviour
 {
-    public GameObject pipe;
-    public float spawnRate = 2;
-    private float timer = 0;
-    public float heightOffSet = 10;
-    
-    // Start is called before the first frame update
-    void Start()
+    [Header("References")]
+    [SerializeField] private GameObject pipePrefab;
+
+    [Header("Spawn Settings")]
+    [SerializeField] private float spawnRate    = 2f;
+    [SerializeField] private float heightOffset = 10f;
+
+    private float timer;
+
+    private void Start()
     {
-        SpawnPipe(); 
+        // Spawn one immediately so the player isn't waiting on the first interval
+        SpawnPipe();
+        timer = 0f;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-      if(timer < spawnRate)
-        {
-            timer = timer + Time.deltaTime;
-        }
-        else
+        timer += Time.deltaTime;
+
+        if (timer >= spawnRate)
         {
             SpawnPipe();
-            timer = 0;
-        } 
+            timer = 0f;
+        }
     }
-    void SpawnPipe()
+
+    private void SpawnPipe()
     {
-        float lowestPoint = transform.position.y - heightOffSet;
-        float highestPoint= transform.position.y + heightOffSet;
+        float spawnY = Random.Range(
+            transform.position.y - heightOffset,
+            transform.position.y + heightOffset
+        );
 
-        Instantiate(pipe,new Vector3(transform.position.x,Random.Range(lowestPoint,highestPoint),0),transform.rotation);
-
-        
+        Instantiate(
+            pipePrefab,
+            new Vector3(transform.position.x, spawnY, 0f),
+            Quaternion.identity   // cleaner than inheriting spawner rotation
+        );
     }
 }

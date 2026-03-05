@@ -1,25 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Moves a pipe leftward at a constant speed and destroys it once off-screen.
+/// </summary>
 public class PipeMoveScript : MonoBehaviour
 {
-    public float moveSpeed = 5;
-    public float deadZone = -100;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [Header("Settings")]
+    [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private float deadZoneX = -45f;  // world-space X, not -100 which was way off-screen
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        transform.position=transform.position + (Vector3.left * moveSpeed) * Time.deltaTime;
-        if (transform.position.x < deadZone)
-        {
-            Debug.Log("Pipe Deleted");
+        transform.Translate(Vector3.left * moveSpeed * Time.deltaTime);
+
+        if (transform.position.x < deadZoneX)
             Destroy(gameObject);
-        }
     }
 }

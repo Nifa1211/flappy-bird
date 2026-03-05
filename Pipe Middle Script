@@ -1,28 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
+/// <summary>
+/// Detects when the bird passes through the pipe gap and awards a point.
+/// Attach to the invisible trigger collider between the two pipe halves.
+/// </summary>
 public class PipeMiddleScript : MonoBehaviour
 {
-    public LogicMangaer logic;
-    // Start is called before the first frame update
-    void Start()
+    // Bird must be on layer 3 ("Bird") to score — set this in Project Settings > Layers
+    private const int BirdLayer = 3;
+
+    private LogicManager logic;
+
+    private void Start()
     {
-        logic=GameObject.FindGameObjectWithTag("Logic").GetComponent<LogicMangaer>();
+        logic = GameObject.FindWithTag("Logic").GetComponent<LogicManager>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.layer == 3)
-        {
-            logic.addScore(1);
-        }
-        
+        if (collision.gameObject.layer == BirdLayer)
+            logic.AddScore(1);
     }
 }

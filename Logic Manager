@@ -1,29 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class LogicMangaer : MonoBehaviour
+/// <summary>
+/// Manages game state: score tracking, game-over screen, and scene restart.
+/// </summary>
+public class LogicManager : MonoBehaviour
 {
-    public int playerScore;
-    public Text scoreText;
-    public GameObject gameOverScreen;
+    [Header("UI References")]
+    [SerializeField] private Text scoreText;
+    [SerializeField] private GameObject gameOverScreen;
 
-    [ContextMenu("Increase Score")]
-    public void addScore(int scoreToAdd)
-    {
-        playerScore=playerScore+scoreToAdd;
-        scoreText.text=playerScore.ToString();
+    private int playerScore;
 
-    }
-    public void restartGame()
+    /// <summary>Adds to the player score and refreshes the UI text.</summary>
+    public void AddScore(int amount)
     {
-SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        playerScore += amount;
+        scoreText.text = playerScore.ToString();
     }
-    public void gameOver()
+
+    /// <summary>Displays the game-over screen.</summary>
+    public void GameOver()
     {
         gameOverScreen.SetActive(true);
     }
 
+    /// <summary>Reloads the active scene to restart the game.</summary>
+    public void RestartGame()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+#if UNITY_EDITOR
+    // Keeps the editor helper — removed from builds automatically
+    [ContextMenu("Increase Score (Debug)")]
+    private void DebugAddScore() => AddScore(1);
+#endif
 }
